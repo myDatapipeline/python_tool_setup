@@ -78,11 +78,7 @@ class s3Client:
                 if is_local:
                    body=res.get('Body').read() #  bytes
                    buffer = BytesIO(body)
-
-                   # Read into Spark DataFrame
-                #    df = spark.read.csv(buffer, header=True, inferSchema=True)
-                #    df.show()
-
+                   return buffer
                 else:
                         # Save the content to a local file
                         print("I am saving the file locally ")
@@ -123,18 +119,3 @@ class s3Client:
         except ClientError as e:
             logging.error(e)
             raise ValueError("Failed to retrieve latest files from S3 bucket.")
-        
-if __name__ == "__main__":
-
-    # Example usage
-    print("S3 Client Example")
-    s3 = s3Client(
-        aws_access_keyid=os.getenv('AWS_ACCESS_KEY_ID'),
-        aws_secret_ket_id=os.getenv('AWS_SECRET_ACCESS_KEY'),
-        bucketname="dbtlearn-sam"
-    )
-    # # Write to S3
-    # s3.s3_write("test_file.txt", "This is a test file content.")
-    # print("File written to S3 successfully.")
-    # Read from S3
-    print(s3.s3_get_file())

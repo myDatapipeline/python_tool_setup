@@ -8,12 +8,15 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     python --version && \
     pip --version && \
-    pip install pipx && \
-    pipx install poetry && \
-    # cull -sSL https://install.python-poetry.org | python3 - && \
-    echo "export PATH=\"$HOME/.local/bin:\$PATH\"" >> ~/.bashrc &&
-    poetry --version && \
-    poetry new zen_pipeline && \
+    pip twine && \
+    pip install wheel \
+    pip install setuptools
+    # pip install pipx && \
+    # pipx install poetry && \
+    # # cull -sSL https://install.python-poetry.org | python3 - && \
+    # echo "export PATH=\"$HOME/.local/bin:\$PATH\"" >> ~/.bashrc &&
+    # poetry --version && \
+    # poetry new zen_pipeline && \
 
 
 
