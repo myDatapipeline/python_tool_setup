@@ -21,3 +21,11 @@
 - GitHub Pages
 - Github Actions Workflow
 - GitHub Packages
+
+##### BRANCH STRATEGY
+- Git Flow
+- GitHub Flow  (Well suited for frequently releases on daily basis.)
+     -> Features branches
+     -> Pull Requests
+     -> Main branch 
+- Trunk-Based development ,-> GitLab flow

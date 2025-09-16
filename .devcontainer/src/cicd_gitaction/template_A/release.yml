@@ -1,0 +1,60 @@
+# Release & sequential promotion (DEV → QA → UAT → PRD)
+name: Release & Promote
+on:
+  push:
+    tags: ['v*.*.*']   # runs when the version tag is created
+
+jobs:
+  build_from_tag:
+    name: Build (once) from tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - run: make build
+      - uses: actions/upload-artifact@v4
+        with: { name: build-outputs, path: dist/ }   # reuse this everywhere
+
+  deploy_dev:
+    name: Deploy to DEV
+    needs: build_from_tag
+    runs-on: ubuntu-latest
+    environment: dev
+    concurrency: env-dev
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { name: build-outputs }
+      - run: ./deploy.sh dev
+
+  deploy_qa:
+    name: Deploy to QA
+    needs: deploy_dev
+    runs-on: ubuntu-latest
+    environment: qa          # add required reviewers in Repo Settings → Environments
+    concurrency: env-qa
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { name: build-outputs }
+      - run: ./deploy.sh qa
+
+  deploy_uat:
+    name: Deploy to UAT
+    needs: deploy_qa
+    runs-on: ubuntu-latest
+    environment: uat
+    concurrency: env-uat
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { name: build-outputs }
+      - run: ./deploy.sh uat
+
+  deploy_prd:
+    name: Deploy to PRD
+    needs: deploy_uat
+    runs-on: ubuntu-latest
+    environment: production   # set this env to require approval = your Approval Gate
+    concurrency: env-prd
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { name: build-outputs }
+      - run: ./deploy.sh prod

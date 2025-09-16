@@ -1,0 +1,36 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test_build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: make test && make build
+
+  preview_dev:
+    name: Deploy PR preview to DEV
+    needs: test_build
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    environment: dev
+    concurrency: env-dev               # prevent overlapping DEV previews
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./deploy.sh dev --preview "${{ github.event.pull_request.number }}"
+
+  # Tag Gate (auto): create a release PR that, when merged, cuts the tag
+  release_please:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          release-type: simple
+          package-name: your-app
