@@ -1,0 +1,53 @@
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
+
+[project]
+name = "testing"
+dynamic = ["version"]
+description = ""
+authors = [
+    {name = "sam"}
+]
+readme = "README.md"
+requires-python = ">=3.10,<4.0.0"
+dependencies = [
+    "pandas (>=2.3.1,<3.0.0)",
+    "pendulum (>=3.1.0,<4.0.0)",
+    "requests (>=2.32.4,<3.0.0)",
+    "cdp-sdk (>=1.29.1,<2.0.0)",
+    "python-dotenv (>=1.1.1,<2.0.0)",
+    "black  (>=24.0.0)",
+    "pytest (>=8.0.0)",
+    "pre-commit (>4.0.0)",
+    "ipykernel (>6.0.0)",
+    "pydantic>=2.7",
+]
+
+[project.optional-dependencies]  #for end-users to install extra dependencies pip install "my-package[dev]" (e.g. “cli”, “gpu”)
+dev = ["pytest>=8.0", "black>=24.0.0"]
+
+# [project.urls]
+# homepage = "https://example.com"
+# repository = "https://github.com/you/my-package"
+# documentation = "https://example.com/docs"
+
+[project.scripts]
+coin_cli = "coinbase_app.coinbase:main"  # CLI entry point after installation can be run as `coin_cli`
+
+# Poetry-specific configuration
+[tool.poetry]
+version = "1.0"                                   # base version; CI may append local part
+readme = ["docs/README.md"]   # multiple READMEs
+classifiers = [
+  "Topic :: Software Development :: Build Tools",
+  "Programming Language :: Python :: 3"
+]
+packages = [{ include = "coinbase_app", from = "src" }]
+package-mode = true 
+
+[tool.poetry.group.dev.dependencies]  # for you and your Team Development dependencies
+flake8 = "^7.0.0"    # >> poetry install --with dev → It installs main dependencies plus everything under [tool.poetry.group.dev.dependencies].
+
+[tool.poetry.dependencies]
+python = ">=3.10,<4.0"       # used for locking; must be subset-compatible with project.requires-python
