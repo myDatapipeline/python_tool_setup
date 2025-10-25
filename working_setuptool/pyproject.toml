@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "example_pkg"
+version = "0.1.0"
+description = "A simple example package built with setuptools"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Your Name", email = "you@example.com" }]
+keywords = ["example", "setuptools", "sample"]
+
+dependencies = [
+  "requests>=2.31",
+  "pandas>=2.0"
+]
+
+optional-dependencies = {  # “extras”
+  dev = ["pytest>=8.0", "black>=24.0.0"]
+}
+
+[project.urls]
+"Homepage" = "https://github.com/yourname/example_pkg"
+"Bug Tracker" = "https://github.com/yourname/example_pkg/issues"
+
+[project.scripts]  # CLI entry points
+example-cli = "example_pkg.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["example_pkg*"]
+
+[tool.setuptools.package-data]
+"example_pkg" = ["data/*.csv"]
